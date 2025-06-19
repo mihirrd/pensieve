@@ -1,3 +1,8 @@
+mod store;
+
+
 fn main() {
-    println!("Hello, world!");
+
+    let mut store = store::Store::<String, String>::new(4);
+
 }
