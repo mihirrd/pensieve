@@ -31,7 +31,7 @@ Pensieve provides a lightweight, thread-safe REST API for storing, retrieving, a
  ## Features
  - JSON-based HTTP API
  - LRU eviction policy (configurable capacity)
- - Concurrency-safe via `Arc<Mutex<...>>`
+ - Thread-safe via `Arc<Mutex<...>>`
  - Built with [Tokio](https://crates.io/crates/tokio) and [Axum](https://crates.io/crates/axum)
 
  ## Getting Started
