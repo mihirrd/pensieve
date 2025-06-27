@@ -1,31 +1,33 @@
 extern crate lru;
 
 use lru::LruCache;
-use std::hash::Hash;
 use std::num::NonZeroUsize;
 
-pub struct Store<K, V> {
-    size: usize,
-    cache: LruCache<K, V>,
+
+pub struct Store {
+    cache: LruCache<String, String>,
 }
 
-impl<K: Eq + Hash, V> Store<K, V> {
-    pub fn new(size: usize) -> Store<K, V> {
+impl Store {
+    pub fn new(size: usize) -> Store {
         Store {
-            size,
             cache: LruCache::new(NonZeroUsize::new(size).unwrap()),
         }
     }
 
-    pub fn get(&mut self, key: K) -> &V {
-        self.cache.get_mut(&key).unwrap()
+    pub fn get(&mut self, key: String) -> String {
+        let val = self.cache.get(&key);
+        match val {
+            Some(val) => val.to_string(),
+            None => "".to_string()
+        }
     }
 
-    pub fn put(&mut self, key: K, val: V) {
+    pub fn put(&mut self, key: String, val: String) {
         self.cache.put(key, val);
     }
 
-    pub fn delete(&mut self, key: K) {
+    pub fn delete(&mut self, key: String) {
         self.cache.pop(&key);
     }
 }
