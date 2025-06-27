@@ -40,12 +40,6 @@ Pensieve provides a lightweight, thread-safe REST API for storing, retrieving, a
  - Rust (1.65+ recommended)
  - Cargo (comes with Rust)
 
- ### Installation
- Clone this repository:
- ```bash
- git clone https://github.com/<your-username>/pensieve.git
- cd pensieve
- ```
 
  ### Building
  ```bash
