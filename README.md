@@ -2,7 +2,7 @@
 <img src="Pensieve.png" alt="" width="500"/>
 </p>
 
-**Pensieve** is a simple, in-memory key–value store service written in Rust. It uses an LRU (Least Recently Used) cache for eviction and exposes a JSON-based HTTP API via the [Axum](https://crates.io/crates/axum) framework. The name comes from one of my most favouite magical objects in the [Wizarding World](https://www.harrypotter.com/writing-by-jk-rowling/pensieve)
+**Pensieve** is a simple, in-memory key–value store written in Rust. It uses an LRU (Least Recently Used) cache for eviction and exposes a JSON-based HTTP API via the [Axum](https://crates.io/crates/axum) framework. The name comes from one of my most favouite magical objects in the [Wizarding World](https://www.harrypotter.com/writing-by-jk-rowling/pensieve)
 
 
  ## Table of Contents
