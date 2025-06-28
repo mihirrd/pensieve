@@ -1,4 +1,6 @@
 mod store;
+mod structs;
+use crate::structs::{AppState, PutRequest};
 
 // Web framework
 use axum::{
@@ -12,8 +14,9 @@ use axum::{
 };
 
 // Serialization
-use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
+
+// Smart pointers
 use std::sync::{Arc, Mutex};
 
 // Files
@@ -23,19 +26,10 @@ use std::io::{self, BufRead};
 use std::path::Path as stdPath;
 
 // Logging
-use tracing::{Level, event};
+use tracing::{event, Level};
 use tracing_subscriber;
 
-#[derive(Serialize, Deserialize)]
-struct PutRequest {
-    key: String,
-    val: String,
-}
 
-struct AppState {
-    store: store::Store,
-    file: File,
-}
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
