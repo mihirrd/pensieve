@@ -50,7 +50,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  ### Running
  By default, the server listens on `0.0.0.0:7878`:
  ```bash
- cargo run --release
+ make run
  ```
 
  ## Configuration
