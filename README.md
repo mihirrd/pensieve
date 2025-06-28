@@ -10,7 +10,6 @@
  - [Features](#features)
  - [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
-   - [Installation](#installation)
    - [Building](#building)
    - [Running](#running)
  - [Configuration](#configuration)
