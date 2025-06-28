@@ -2,7 +2,7 @@
 <img src="Pensieve.png" alt="" width="500"/>
 </p>
 
-**Pensieve** is a simple, in-memory key–value store written in Rust. It uses an LRU (Least Recently Used) cache for eviction and exposes a JSON-based HTTP API via the [Axum](https://crates.io/crates/axum) framework. The name comes from one of my most favouite magical objects in the [Wizarding World](https://www.harrypotter.com/writing-by-jk-rowling/pensieve)
+**Pensieve** is a durable, in-memory key–value store written in Rust. It uses an LRU (Least Recently Used) cache for eviction and exposes a HTTP REST API via the [Axum](https://crates.io/crates/axum). The name _Pensieve_ comes from one of the most fascinating magical objects in the [Wizarding World](https://www.harrypotter.com/writing-by-jk-rowling/pensieve)
 
 
  ## Table of Contents
@@ -26,11 +26,12 @@
  - [Acknowledgments](#acknowledgments)
 
  ## Overview
-Pensieve provides a lightweight, thread-safe REST API for storing, retrieving, and deleting string values by key. Internally, it maintains a capacity-limited LRU cache so that the most-recently-accessed keys stay in memory, while old entries are evicted when capacity is reached.
+Pensieve provides a lightweight, durable, thread-safe REST API for storing, retrieving, and deleting string values by key. Internally, it maintains a capacity-limited LRU cache so that the most-recently-accessed keys stay in memory, while old entries are evicted when capacity is reached.
 
  ## Features
- - JSON-based HTTP API
+ - HTTP API
  - LRU eviction policy (configurable capacity)
+ - Append-only logs for durability
  - Thread-safe via `Arc<Mutex<...>>`
  - Built with [Tokio](https://crates.io/crates/tokio) and [Axum](https://crates.io/crates/axum)
 
