@@ -29,22 +29,32 @@ use std::path::Path as stdPath;
 use tracing::{event, Level};
 use tracing_subscriber;
 
+use std::env;
 
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
+
+    // Initialise logging
     tracing_subscriber::fmt::init();
     event!(Level::INFO, "Initialising node");
 
+    let node_id: u32 = env::var("NODE_ID")
+        .expect("NODE_ID not set")
+        .parse()
+        .expect("NODE_ID must be a valid number");
+
+    event!(Level::INFO, "Starting node with ID: {}", node_id);
+
     //Append-only logs
     event!(Level::INFO, "Initialising oplogs");
-    let file_path = "op_logs.log";
+    let file_path = "./op_logs.log";
     let file_result = OpenOptions::new().create(true).append(true).open(file_path);
 
     let file = match file_result {
         Ok(file) => file,
-        Err(error) => {
-            event!(Level::ERROR, "Could not load oplogs. {error :?}");
+        Err(_error) => {
+            event!(Level::ERROR, "Could not load oplogs");
             panic!("Shutting down");
         }
     };
