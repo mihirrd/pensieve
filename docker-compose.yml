@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  node1:
+    build: .
+    environment:
+      NODE_ID: "1"
+    ports:
+      - "8001:8000"
+
+  node2:
+    build: .
+    environment:
+      NODE_ID: "2"
+    ports:
+      - "8002:8000"
+
+  node3:
+    build: .
+    environment:
+      NODE_ID: "3"
+    ports:
+      - "8003:8000"
