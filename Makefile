@@ -10,6 +10,9 @@ all: run
 run:
 	RUST_LOG=$(RUST_LOG) cargo run
 
+docker:
+	docker-compose up
+
 # Build the project in debug mode
 build:
 	cargo build

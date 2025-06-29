@@ -4,20 +4,23 @@ services:
   node1:
     build: .
     environment:
+      PORT: "8001"
       NODE_ID: "1"
     ports:
-      - "8001:8000"
+      - "8001:7878"
 
   node2:
     build: .
     environment:
+      PORT: "8002"
       NODE_ID: "2"
     ports:
-      - "8002:8000"
+      - "8002:7878"
 
   node3:
     build: .
     environment:
+      PORT: "8003"
       NODE_ID: "3"
     ports:
-      - "8003:8000"
+      - "8003:7878"
