@@ -32,6 +32,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  - LRU eviction policy (configurable capacity)
  - Append-only logs for durability
  - Thread-safe via `Arc<Mutex<...>>`
+ - Multi-node setup
  - Built with [Tokio](https://crates.io/crates/tokio) and [Axum](https://crates.io/crates/axum)
 
  ## Getting Started
@@ -39,6 +40,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  ### Prerequisites
  - Rust (1.65+ recommended)
  - Cargo (comes with Rust)
+ - Docker
 
 
  ### Building
@@ -47,9 +49,10 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  ```
 
  ### Running
- By default, the server listens on `0.0.0.0:7878`:
+ By default, the server listens on `0.0.0.0:7878`
+ Docker will spin the server up on 3 nodes - 8001, 8002 and 8003
  ```bash
- make run
+ make docker
  ```
 
  ## Configuration
@@ -73,8 +76,9 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  ```
 
  Example with `curl`:
+ PORT = [8001,8002,8003]
  ```bash
- curl http://localhost:7878/get/foo
+ curl http://localhost:{PORT}/get/foo
  ```
 
  Response (key exists):
@@ -97,7 +101,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
 
  Example with `curl`:
  ```bash
- curl -X POST http://localhost:7878/put \
+ curl -X POST http://localhost:{PORT}/put \
       -H "Content-Type: application/json" \
       -d '{ "key": "foo", "val": "bar" }'
  ```
@@ -113,28 +117,17 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  Request:
  ```http
  DELETE /delete/foo HTTP/1.1
- Host: localhost:7878
+ Host: localhost:{PORT}
  ```
 
  Example with `curl`:
  ```bash
- curl -X DELETE http://localhost:7878/delete/foo
+ curl -X DELETE http://localhost:{PORT}/delete/foo
  ```
 
  Response:
  ```json
  { "status": "ok" }
- ```
-
- ## Project Structure
- ```text
- pensieve/
- ├── Cargo.toml            # Project metadata & dependencies
- ├── LICENSE               # MIT License
- ├── README.md             # This file
- └── src/
-     ├── main.rs           # HTTP server, routing & state
-     └── store.rs          # LRU-backed key–value store
  ```
 
 
