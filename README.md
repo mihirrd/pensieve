@@ -28,11 +28,12 @@
 Pensieve provides a lightweight, durable, thread-safe REST API for storing, retrieving, and deleting string values by key. Internally, it maintains a capacity-limited LRU cache so that the most-recently-accessed keys stay in memory, while old entries are evicted when capacity is reached.
 
  ## Features
- - HTTP API
+ - HTTP REST API with JSON communication
  - LRU eviction policy (configurable capacity)
  - Append-only logs for durability
  - Thread-safe via `Arc<Mutex<...>>`
- - Multi-node setup
+ - Multi-node cluster support with Docker
+ - Inter-node heartbeat system for failure detection
  - Built with [Tokio](https://crates.io/crates/tokio) and [Axum](https://crates.io/crates/axum)
 
  ## Getting Started
@@ -49,13 +50,28 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  ```
 
  ### Running
+
+ #### Single Node
  By default, the server listens on `0.0.0.0:7878`
- Docker will spin the server up on 3 nodes - 8001, 8002 and 8003
+ ```bash
+ cargo run
+ ```
+
+ #### Multi-Node Cluster
+ Deploy a 3-node cluster with heartbeat monitoring:
  ```bash
  make docker
  ```
+ This creates nodes accessible on ports 8001, 8002, and 8003 with automatic peer discovery and failure detection.
 
  ## Configuration
+
+ ### Environment Variables
+ - `NODE_ID`: Unique identifier for the node (required for multi-node setup)
+ - `PORT`: Port number for the node (required for multi-node setup)
+ - `PEERS`: Comma-separated list of peer URLs for heartbeat communication (required for multi-node setup)
+
+ ### Cache Configuration
  The cache capacity is currently hard-coded to `1000` entries in `src/main.rs`:
  ```rust
  let store = Store::new(1000);
@@ -66,7 +82,9 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
 
  All endpoints use `application/json` for requests and responses.
 
- ### GET /get/{key}
+ ### Core API Endpoints
+
+ #### GET /get/{key}
  Retrieve the value associated with a key.
 
  Request:
@@ -91,7 +109,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  { "val": "" }
  ```
 
- ### POST /put
+ #### POST /put
  Store or update a key–value pair.
 
  Request (JSON body):
@@ -111,7 +129,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  { "status": "ok" }
  ```
 
- ### DELETE /delete/{key}
+ #### DELETE /delete/{key}
  Remove a key from the store.
 
  Request:
