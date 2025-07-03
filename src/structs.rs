@@ -9,7 +9,21 @@ pub(crate) struct PutRequest {
     pub val: String,
 }
 
+pub enum Health{
+    Alive,
+    Dead
+}
+
+pub struct Peer {
+    pub node_id: usize,
+    pub url: String,
+    pub last_seen: u64,
+    pub health: Health
+}
+
 pub(crate) struct AppState {
     pub store: Store,
     pub file: File,
+    pub peers: Vec<Peer>
+
 }

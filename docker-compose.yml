@@ -6,6 +6,7 @@ services:
     environment:
       PORT: "8001"
       NODE_ID: "1"
+      PEERS: "http://node2:7878,http://node3:7878"
     ports:
       - "8001:7878"
 
@@ -14,6 +15,7 @@ services:
     environment:
       PORT: "8002"
       NODE_ID: "2"
+      PEERS: "http://node1:7878,http://node3:7878"
     ports:
       - "8002:7878"
 
@@ -22,5 +24,6 @@ services:
     environment:
       PORT: "8003"
       NODE_ID: "3"
+      PEERS: "http://node1:7878,http://node2:7878"
     ports:
       - "8003:7878"

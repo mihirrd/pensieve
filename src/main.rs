@@ -1,7 +1,7 @@
 mod store;
 mod structs;
 mod config;
-mod store_handlers;
+mod handlers;
 mod util;
 use crate::structs::AppState;
 
@@ -12,7 +12,7 @@ use axum::{
 };
 
 /// Smart pointers
-use std::{fs::OpenOptions, sync::{Arc, Mutex}};
+use std::{env, fs::OpenOptions, sync::{Arc, Mutex}};
 
 /// Logging
 use tracing::{event, Level};
@@ -26,7 +26,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
     event!(Level::INFO, "Initialising node");
     let node_config = config::initialise_node();
-
+    let peers = util::parse_peer_urls(env::var("PEERS").expect("Missing PORT").to_string());
 
     //Append-only logs
     event!(Level::INFO, "Initialising oplogs");
@@ -46,16 +46,16 @@ async fn main() {
     // App state to be shared among the handlers
     // TODO: Refactor cache size allocation
     let store = store::Store::new(1000);
-    let mut state = Arc::new(Mutex::new(AppState { store, file }));
+    let mut state = Arc::new(Mutex::new(AppState { store, file, peers }));
 
     //On startup, read op_log to make the state up to date
     util::read_oplog(&mut state, &file_path);
 
     // App Router
     let app = Router::new()
-        .route("/get/{key}", get(store_handlers::store_get))
-        .route("/put", post(store_handlers::store_put))
-        .route("/delete/{key}", delete(store_handlers::store_delete))
+        .route("/get/{key}", get(handlers::store_get))
+        .route("/put", post(handlers::store_put))
+        .route("/delete/{key}", delete(handlers::store_delete))
         .with_state(state);
 
     event!(Level::INFO, "Starting up the server...");
