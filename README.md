@@ -19,7 +19,6 @@
    - [DELETE /delete/{key}](#delete-deletekey)
  - [Project Structure](#project-structure)
  - [Error Handling](#error-handling)
- - [Logging](#logging)
  - [Contributing](#contributing)
  - [License](#license)
  - [Acknowledgments](#acknowledgments)
@@ -50,15 +49,7 @@ Pensieve provides a lightweight, durable, thread-safe REST API for storing, retr
  ```
 
  ### Running
-
- #### Single Node
- By default, the server listens on `0.0.0.0:7878`
- ```bash
- cargo run
- ```
-
- #### Multi-Node Cluster
- Deploy a 3-node cluster with heartbeat monitoring:
+ Deploy a 3-node cluster
  ```bash
  make docker
  ```
