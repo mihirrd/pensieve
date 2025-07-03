@@ -1,4 +1,4 @@
-use crate::store::Store;
+use crate::{config::Node, store::Store};
 
 use serde::{Deserialize, Serialize};
 use std::fs::File;
@@ -9,11 +9,13 @@ pub(crate) struct PutRequest {
     pub val: String,
 }
 
+#[derive(Clone, PartialEq)]
 pub enum Health{
     Alive,
     Dead
 }
 
+#[derive(Clone)]
 pub struct Peer {
     pub node_id: usize,
     pub url: String,
@@ -22,6 +24,7 @@ pub struct Peer {
 }
 
 pub(crate) struct AppState {
+    pub node_config: Node,
     pub store: Store,
     pub file: File,
     pub peers: Vec<Peer>

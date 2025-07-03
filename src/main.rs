@@ -26,7 +26,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
     event!(Level::INFO, "Initialising node");
     let node_config = config::initialise_node();
-    let peers = util::parse_peer_urls(env::var("PEERS").expect("Missing PORT").to_string());
+    let peers = util::parse_peer_urls(env::var("PEERS").expect("Missing PEERS").to_string());
 
     //Append-only logs
     event!(Level::INFO, "Initialising oplogs");
@@ -46,20 +46,36 @@ async fn main() {
     // App state to be shared among the handlers
     // TODO: Refactor cache size allocation
     let store = store::Store::new(1000);
-    let mut state = Arc::new(Mutex::new(AppState { store, file, peers }));
+    let mut state = Arc::new(Mutex::new(AppState { node_config, store, file, peers }));
 
     //On startup, read op_log to make the state up to date
     util::read_oplog(&mut state, &file_path);
+
+    // Clone state for background tasks
+    let heartbeat_state = Arc::clone(&state);
+    let failure_detector_state = Arc::clone(&state);
+
+    // Start background tasks
+    event!(Level::INFO, "Starting heartbeat sender");
+    tokio::spawn(async move {
+        handlers::start_heartbeat_sender(heartbeat_state).await;
+    });
+
+    event!(Level::INFO, "Starting failure detector");
+    tokio::spawn(async move {
+        handlers::start_failure_detector(failure_detector_state).await;
+    });
 
     // App Router
     let app = Router::new()
         .route("/get/{key}", get(handlers::store_get))
         .route("/put", post(handlers::store_put))
         .route("/delete/{key}", delete(handlers::store_delete))
+        .route("/internal/heartbeat", post(handlers::heartbeat_handler))
         .with_state(state);
 
     event!(Level::INFO, "Starting up the server...");
     let listener = tokio::net::TcpListener::bind("0.0.0.0:7878").await.unwrap();
-    event!(Level::INFO, "Server running on port: {0:?}", node_config.port);
+
     axum::serve(listener, app).await.unwrap();
 }

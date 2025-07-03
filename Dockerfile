@@ -1,4 +1,4 @@
-FROM rust:1.79
+FROM rust:1.82
 
 WORKDIR /app
 COPY . .
